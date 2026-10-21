@@ -9,38 +9,45 @@ import java.util.Scanner;
 public class App {
     Scanner sc = new Scanner(System.in);
     public void main(String[] args) {
-        int opcion = 1;
-        do{
-            printMenu();
-            switch (opcion){
-                case 1:
-                    altaClienteYMascotas();
-                    break;
-                case 2:
-                    //TODO
-                    // altaCliente();
-                    break;
-                case 3:
-                    //TODO
-                    // altaMascota();
-                    break;
-                case 4:
-                    //TODO
-                    // registroTratamiento();
-                    break;
-                case 5:
-                    //TODO
-                    // getFacturas();
-                    break;
-                case 6:
-                    break;
-                default:
-                    opcion=0;
-                    System.out.println("Introduzca una opción válida");
-                    break;
-            }
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            System.out.println("Sesion abierta");
+            int opcion = 1;
+            do {
+                printMenu();
+                switch (opcion) {
+                    case 1:
+                        altaClienteYMascotas(session);
+                        break;
+                    case 2:
+                        //TODO
+                        // altaCliente();
+                        break;
+                    case 3:
+                        //TODO
+                        // altaMascota();
+                        break;
+                    case 4:
+                        //TODO
+                        // registroTratamiento();
+                        break;
+                    case 5:
+                        //TODO
+                        // getFacturas();
+                        break;
+                    case 6:
+                        break;
+                    default:
+                        opcion = 0;
+                        System.out.println("Introduzca una opción válida");
+                        break;
+                }
 
-        }while(opcion!= 6);
+            } while (opcion != 6);
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally {
+            HibernateUtil.shutdown();
+        }
     }
 
      private static void printMenu(){

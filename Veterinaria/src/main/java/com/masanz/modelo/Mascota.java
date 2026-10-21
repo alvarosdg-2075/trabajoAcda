@@ -1,5 +1,6 @@
 package com.masanz.modelo;
 
+import org.hibernate.Session;
 import jakarta.persistence.*;
 
 import java.sql.Date;
@@ -22,4 +23,34 @@ public class Mascota {
 
     @Column
     private Date fecha_nac;
+
+    @ManyToOne
+    @JoinColumn(name="ID_Cliente")
+    private Cliente cliente;
+
+    public Mascota(){}
+    public Mascota(String nombre,String especie,String raza,Date fecha_nac,Cliente cliente){
+        this.nombre = nombre;
+        this.especie = especie;
+        this.raza = raza;
+        this.fecha_nac = fecha_nac;
+        this.cliente = cliente;
+    }
+
+
+    /**
+     *
+     * @param nombre nombre de la mascota
+     * @param especie Especie de la mascota
+     * @param raza Raza de la mascota
+     * @param fecha_nac Fecha de nacimiento de la mascota
+     * @return true si se ha efectuado sin problemas la inserción false si no.
+     */
+    public static boolean insertar(String nombre, String especie, String raza, Date fecha_nac,Cliente cliente ,Session session){
+        boolean res;
+        session.beginTransaction();
+        Mascota mascota = new Mascota(nombre,especie,raza,fecha_nac,cliente);
+        cliente.addMascota(mascota);
+        return res;
+    }
 }

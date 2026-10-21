@@ -2,6 +2,8 @@ package com.masanz.modelo;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "clientes")
 public class Cliente {
@@ -20,4 +22,13 @@ public class Cliente {
 
     @Column
     private String email;
+
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Mascota> mascotas;
+
+    public boolean addMascota(Mascota mascota){
+        return mascotas.add(mascota);
+    }
+
+
 }

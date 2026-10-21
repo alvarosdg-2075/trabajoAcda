@@ -1,19 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="56c79ad4-70dc-49a9-820d-96dd5ab24b95" name="Changes" comment="" />
+    <list default="true" id="2f44801b-0b9e-47be-9d11-0341c13b331c" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 3
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "arojasurru1"
+  }
 }]]></component>
-  <component name="ProjectId" id="3L0dm96nMbWPgPHV4Aw6qP8eWpf" />
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/alvarosdg-2075/trabajoAcda",
+    "accountId": "a4aefa17-f08b-461f-aa50-d2ff4e57ae83"
+  }
+}]]></component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 8
+}]]></component>
+  <component name="ProjectId" id="3L0eR2lUsCXx41XQF7iqUnD3geN" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -24,16 +47,16 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/asanzdeech/Downloads/trabajoAcda"
+    "last_opened_file_path": "C:/datos/Documents/acda/proyVeterinaria/trabajoAcda"
   }
 }]]></component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="56c79ad4-70dc-49a9-820d-96dd5ab24b95" name="Changes" comment="" />
-      <created>1792595076061</created>
+      <changelist id="2f44801b-0b9e-47be-9d11-0341c13b331c" name="Changes" comment="" />
+      <created>1792595400416</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1792595076061</updated>
+      <updated>1792595400416</updated>
     </task>
     <servers />
   </component>
