@@ -57,7 +57,7 @@ public class App {
      *
      * @return true si ejecución correcta false si ejecución fallida y ultima acción cancelada
      */
-    private boolean altaClienteYMascotas(){
+    private boolean altaClienteYMascotas(Session session){
         Boolean res =false;
         //TODO
         // res = altaCliente();
@@ -75,5 +75,39 @@ public class App {
             leido = sc.nextLine();
         }while(leido.equalsIgnoreCase("s"));
         return res;
+    }
+    private boolean altaCliente(){
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Introduce tu dni");
+        String dni = scan.nextLine();
+        if (dni.isEmpty()) {
+            return false;
+        }
+        System.out.println("Introduce tu nombre");
+        String nombre = scan.nextLine();
+        System.out.println("Introduce tu telefono");
+        String telefono = scan.nextLine();
+        System.out.println("Introduce tu email");
+        String email = scan.nextLine();
+
+        return Cliente.insertar(dni, nombre, telefono, email, session);
+
+    }
+    private boolean altaMascota(Session session){
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Introduce el nombre de tu mascota");
+        String nombre = scan.nextLine();
+        if (nombre.isEmpty()) {
+            return false;
+        }
+        System.out.println("Introduce su especie");
+        String especie = scan.nextLine();
+        System.out.println("Introduce su raza");
+        String raza = scan.nextLine();
+        System.out.println("Introduce su fecha de nacimiento");
+        String fecha_nac = scan.nextLine();
+
+        return Mascota.insertar(nombre, especie, raza, fecha_nac, session);
+
     }
 }
