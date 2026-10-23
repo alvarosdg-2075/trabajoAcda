@@ -66,15 +66,13 @@ public class App {
      */
     private boolean altaClienteYMascotas(Session session){
         Boolean res =false;
-        //TODO
-        // res = altaCliente();
+        res = altaCliente(session);
         if(!res){
             return res;
         }
         String leido;
         do{
-            //TODO
-            // res = altaMascota();
+            res = altaMascota(session);
             if(!res){
                 return res;
             }
@@ -83,7 +81,7 @@ public class App {
         }while(leido.equalsIgnoreCase("s"));
         return res;
     }
-    private boolean altaCliente(){
+    private Cliente altaCliente(){
         Scanner scan = new Scanner(System.in);
         System.out.println("Introduce tu dni");
         String dni = scan.nextLine();
@@ -113,8 +111,9 @@ public class App {
         String raza = scan.nextLine();
         System.out.println("Introduce su fecha de nacimiento");
         String fecha_nac = scan.nextLine();
-
-        return Mascota.insertar(nombre, especie, raza, fecha_nac, session);
+        System.out.println("Introduce el DNI del cliente dueño");
+        String dni_Cliente = scan.nextLine();
+        Cliente duenio = Cliente.getCliente(dni_Cliente);
+        return Mascota.insertar(nombre, especie, raza, fecha_nac,duenio,session);
 
     }
-}

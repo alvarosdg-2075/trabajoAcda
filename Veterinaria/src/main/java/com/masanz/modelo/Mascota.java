@@ -1,6 +1,6 @@
 package com.masanz.modelo;
 
-import org.hibernate.Session;
+import org.hibernate.*;
 import jakarta.persistence.*;
 
 import java.sql.Date;
@@ -47,10 +47,20 @@ public class Mascota {
      * @return true si se ha efectuado sin problemas la inserción false si no.
      */
     public static boolean insertar(String nombre, String especie, String raza, Date fecha_nac,Cliente cliente ,Session session){
-        boolean res;
-        session.beginTransaction();
-        Mascota mascota = new Mascota(nombre,especie,raza,fecha_nac,cliente);
-        cliente.addMascota(mascota);
-        return res;
+        boolean res = true;
+        Transaction tr = null;
+        try {
+            tr=session.beginTransaction();
+            Mascota mascota = new Mascota(nombre, especie, raza, fecha_nac, cliente);
+            cliente.addMascota(mascota);
+            session.persist(mascota);
+            tr.commit();
+        }catch(HibernateException he){
+            if (tr != null){
+                tr.rollback();
+            }
+            res = false;
+        }
+            return res;
     }
 }
