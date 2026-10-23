@@ -43,22 +43,22 @@ public class Cliente {
 
     public static Cliente insertar(String dni, String nombre, String telefono, String email, Session session){
         Transaction tr = null;
-        boolean res = true;
+        Cliente cliente;
         try{
             tr = session.beginTransaction();
-            Cliente cliente = new Cliente(dni,nombre,telefono,email);
+            cliente = new Cliente(dni,nombre,telefono,email);
             session.persist(cliente);
             tr.commit();
         }catch(HibernateException he){
             if (tr != null){
                 tr.rollback();
             }
-            res = false;
+            cliente = null;
         }
-
-        return res;
+        return cliente;
     }
-    public static Cliente getCliente(String dni){
-
+    public static Cliente getCliente(String dni,Session session){
+        List<Cliente> clientes = session.createQuery("FROM Cliente c where c.dni = :dni",Cliente.class).setParameter("dni",dni).getResultList();
+        return clientes.getFirst();
     }
 }
