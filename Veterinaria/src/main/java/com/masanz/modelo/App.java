@@ -27,12 +27,10 @@ public class App {
                         altaMascota(session);
                         break;
                     case 4:
-                        //TODO
-                        // registroTratamiento();
+                        registroTratamiento(session);
                         break;
                     case 5:
-                        //TODO
-                        // getFacturas();
+                        getFacturas(session);
                         break;
                     case 6:
                         break;
@@ -136,4 +134,100 @@ public class App {
         Cliente duenio = Cliente.getCliente(dni_Cliente, session);
         return Mascota.insertar(nombre, especie, raza, DateNac, duenio, session);
     }
+
+    private boolean registroTratamiento(Session session) {
+        Scanner scan = new Scanner(System.in);
+
+        System.out.println("Introduce el ID de la mascota");
+        int idMascota;
+        try {
+            idMascota = Integer.parseInt(scan.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("ID de mascota no válido");
+            return false;
+        }
+
+        List<Object[]> datos = session.createQuery(
+                        "SELECT m.cliente.dni, m.cliente.nombre, m.nombre FROM Mascota m WHERE m.id = :id",
+                        Object[].class)
+                .setParameter("id", idMascota)
+                .getResultList();
+        if (datos.isEmpty()) {
+            System.out.println("No existe ninguna mascota con ese ID");
+            return false;
+        }
+        String dni = String.valueOf(datos.get(0)[0]);
+        String nombreCliente = String.valueOf(datos.get(0)[1]);
+        String nombreMascota = String.valueOf(datos.get(0)[2]);
+
+        String descripcion;
+        do {
+            System.out.println("Introduce la descripción del tratamiento");
+            descripcion = scan.nextLine();
+        } while (descripcion.isBlank());
+
+        float coste;
+        try {
+            System.out.println("Introduce el coste (ej. 45.50)");
+            coste = Float.parseFloat(scan.nextLine().trim().replace(',', '.'));
+            if (coste < 0) {
+                System.out.println("El coste no puede ser negativo");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Coste no válido");
+            return false;
+        }
+
+        Date fecha = new Date(System.currentTimeMillis());
+
+        return true;
+    }
 }
+    private List<Object[]> getFacturas(Session session) {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Consultar historial por: 1 - Cliente (DNI), 2 - Mascota (ID)");
+        String opcion = scan.nextLine().trim();
+
+        String base = "SELECT f.id, f.fecha, f.mascota_factura.nombre, f.descripcion, f.coste FROM Factura f ";
+        String orden = " ORDER BY f.fecha, f.id";
+        List<Object[]> filas;
+        String etiqueta;
+
+        try {
+            if (opcion.equals("1")) {
+                System.out.println("Introduce el DNI del cliente");
+                String dni = scan.nextLine().trim();
+                filas = session.createQuery(base + "WHERE f.mascota_factura.cliente.dni = :dni" + orden, Object[].class)
+                        .setParameter("dni", dni).getResultList();
+                etiqueta = "cliente_" + dni;
+            } else if (opcion.equals("2")) {
+                System.out.println("Introduce el ID de la mascota");
+                int id = Integer.parseInt(scan.nextLine().trim());
+                filas = session.createQuery(base + "WHERE f.mascota_factura.id = :id" + orden, Object[].class)
+                        .setParameter("id", id).getResultList();
+                etiqueta = "mascota_" + id;
+            } else {
+                System.out.println("Opción no válida");
+                return null;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("ID no válido");
+            return null;
+        }
+
+        if (filas.isEmpty()) {
+            System.out.println("No hay tratamientos registrados");
+            return filas;
+        }
+
+        double total = 0;
+        for (Object[] f : filas) {
+            double coste = ((Number) f[4]).doubleValue();
+            total += coste;
+            System.out.println(String.format(Locale.US, "Factura %s | %s | %s | %s | %.2f EUR",
+                    f[0], f[1], f[2], f[3], coste));
+        }
+        System.out.println(String.format(Locale.US, "Total: %.2f EUR", total));
+        return filas;
+    }
