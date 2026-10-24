@@ -21,6 +21,7 @@ public class FacturaController {
             bw.write(factura.getDescripcion());
             bw.newLine();
             bw.write("Coste: "+ factura.getCoste());
+            bw.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
