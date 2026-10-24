@@ -38,6 +38,10 @@ public class Cliente {
         this.email = email;
     }
 
+    public int getId(){return this.id;}
+
+    public String getDni(){return this.dni;}
+
     public boolean addMascota(Mascota mascota){
         return mascotas.add(mascota);
     }

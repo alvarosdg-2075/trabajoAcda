@@ -38,6 +38,13 @@ public class Factura {
         this.mascota_factura = mascota;
     }
 
+    public int getId(){return this.id;}
+
+    public Mascota getMascota(){return this.mascota_factura;}
+    public Date getFecha(){return this.fecha;}
+    public String getDescripcion(){return this.descripcion;}
+    public float getCoste() {return coste;}
+
     public static ArrayList<Factura> getFacturasCliente(String dni, Session session){
         List<Factura> facturas = session.createQuery("FROM Factura f where f.mascota_factura.cliente.dni = :dni",Factura.class).setParameter("dni",dni).getResultList();
         return new ArrayList<>(facturas);

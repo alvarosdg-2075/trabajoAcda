@@ -42,7 +42,11 @@ public class Mascota {
         this.cliente = cliente;
     }
 
+    public Cliente getCliente() {return cliente;}
 
+    public String getNombre() {
+        return nombre;
+    }
 
     public boolean addFactura(Factura factura){ return facturas.add(factura);}
 
