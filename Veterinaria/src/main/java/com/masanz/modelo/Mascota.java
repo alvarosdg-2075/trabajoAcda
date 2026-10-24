@@ -4,6 +4,7 @@ import org.hibernate.*;
 import jakarta.persistence.*;
 
 import java.sql.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "mascotas")
@@ -28,6 +29,10 @@ public class Mascota {
     @JoinColumn(name="ID_Cliente")
     private Cliente cliente;
 
+
+    @OneToMany(mappedBy = "mascota_factura", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Factura> facturas;
+
     public Mascota(){}
     public Mascota(String nombre,String especie,String raza,Date fecha_nac,Cliente cliente){
         this.nombre = nombre;
@@ -37,6 +42,9 @@ public class Mascota {
         this.cliente = cliente;
     }
 
+
+
+    public boolean addFactura(Factura factura){ return facturas.add(factura);}
 
     /**
      *
@@ -51,6 +59,7 @@ public class Mascota {
         Transaction tr = null;
         try {
             tr=session.beginTransaction();
+            cliente = (Cliente) session.merge(cliente);
             Mascota mascota = new Mascota(nombre, especie, raza, fecha_nac, cliente);
             cliente.addMascota(mascota);
             session.persist(mascota);
@@ -63,4 +72,5 @@ public class Mascota {
         }
             return res;
     }
+
 }

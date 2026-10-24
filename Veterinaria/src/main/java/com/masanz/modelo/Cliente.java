@@ -29,6 +29,7 @@ public class Cliente {
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Mascota> mascotas;
 
+
     public Cliente(){}
     public Cliente(String dni, String nombre, String telefono, String email){
         this.dni = dni;
