@@ -4,7 +4,10 @@ import com.masanz.util.HibernateUtil;
 import org.hibernate.Session;
 
 import java.sql.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class App {
@@ -146,26 +149,12 @@ public class App {
             System.out.println("ID de mascota no válido");
             return false;
         }
-
-        List<Object[]> datos = session.createQuery(
-                        "SELECT m.cliente.dni, m.cliente.nombre, m.nombre FROM Mascota m WHERE m.id = :id",
-                        Object[].class)
-                .setParameter("id", idMascota)
-                .getResultList();
-        if (datos.isEmpty()) {
-            System.out.println("No existe ninguna mascota con ese ID");
-            return false;
-        }
-        String dni = String.valueOf(datos.get(0)[0]);
-        String nombreCliente = String.valueOf(datos.get(0)[1]);
-        String nombreMascota = String.valueOf(datos.get(0)[2]);
-
+        Mascota mascota = Mascota.getMascota(idMascota,session);
         String descripcion;
         do {
             System.out.println("Introduce la descripción del tratamiento");
             descripcion = scan.nextLine();
         } while (descripcion.isBlank());
-
         float coste;
         try {
             System.out.println("Introduce el coste (ej. 45.50)");
@@ -178,35 +167,23 @@ public class App {
             System.out.println("Coste no válido");
             return false;
         }
-
-        Date fecha = new Date(System.currentTimeMillis());
-
-        return true;
+        Date fecha = Date.valueOf(LocalDate.now());
+        return Factura.insertar(fecha,descripcion,coste,mascota,session);
     }
-}
-    private List<Object[]> getFacturas(Session session) {
+    private ArrayList<Factura> getFacturas(Session session) {
         Scanner scan = new Scanner(System.in);
         System.out.println("Consultar historial por: 1 - Cliente (DNI), 2 - Mascota (ID)");
         String opcion = scan.nextLine().trim();
-
-        String base = "SELECT f.id, f.fecha, f.mascota_factura.nombre, f.descripcion, f.coste FROM Factura f ";
-        String orden = " ORDER BY f.fecha, f.id";
-        List<Object[]> filas;
-        String etiqueta;
-
+        ArrayList<Factura> filas;
         try {
             if (opcion.equals("1")) {
                 System.out.println("Introduce el DNI del cliente");
                 String dni = scan.nextLine().trim();
-                filas = session.createQuery(base + "WHERE f.mascota_factura.cliente.dni = :dni" + orden, Object[].class)
-                        .setParameter("dni", dni).getResultList();
-                etiqueta = "cliente_" + dni;
+                filas = Factura.getFacturasCliente(dni,session);
             } else if (opcion.equals("2")) {
                 System.out.println("Introduce el ID de la mascota");
                 int id = Integer.parseInt(scan.nextLine().trim());
-                filas = session.createQuery(base + "WHERE f.mascota_factura.id = :id" + orden, Object[].class)
-                        .setParameter("id", id).getResultList();
-                etiqueta = "mascota_" + id;
+                filas = Factura.getFacturasMascota(id,session);
             } else {
                 System.out.println("Opción no válida");
                 return null;
@@ -215,19 +192,21 @@ public class App {
             System.out.println("ID no válido");
             return null;
         }
-
         if (filas.isEmpty()) {
             System.out.println("No hay tratamientos registrados");
             return filas;
         }
-
         double total = 0;
-        for (Object[] f : filas) {
-            double coste = ((Number) f[4]).doubleValue();
+        int i = 1;
+        for (Factura f : filas) {
+            double coste = f.getCoste();
             total += coste;
-            System.out.println(String.format(Locale.US, "Factura %s | %s | %s | %s | %.2f EUR",
-                    f[0], f[1], f[2], f[3], coste));
+            System.out.println("Factura " + i);
+            System.out.println(f);
+            i++;
         }
-        System.out.println(String.format(Locale.US, "Total: %.2f EUR", total));
+        System.out.printf("Total: %.2f EUR\n", total);
         return filas;
     }
+}
+

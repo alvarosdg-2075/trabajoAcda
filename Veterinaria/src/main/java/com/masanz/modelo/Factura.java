@@ -49,7 +49,7 @@ public class Factura {
         List<Factura> facturas = session.createQuery("FROM Factura f where f.mascota_factura.cliente.dni = :dni",Factura.class).setParameter("dni",dni).getResultList();
         return new ArrayList<>(facturas);
     }
-    public static ArrayList<Factura> getFacturasMascota(String id_mascota, Session session){
+    public static ArrayList<Factura> getFacturasMascota(int id_mascota, Session session){
         List<Factura> facturas = session.createQuery("FROM Factura f where f.mascota_factura.id = :id",Factura.class).setParameter("id",id_mascota).getResultList();
         return new ArrayList<>(facturas);
     }
@@ -71,5 +71,10 @@ public class Factura {
             res = false;
         }
         return res;
+    }
+
+    @Override
+    public String toString(){
+        return String.format("Factura: %d | Fecha: %s | Mascota: %d | Coste: %f | Descripcion: %s",id,fecha.toString(),mascota_factura.getId(),coste,descripcion);
     }
 }

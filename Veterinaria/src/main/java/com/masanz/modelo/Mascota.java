@@ -48,6 +48,10 @@ public class Mascota {
         return nombre;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public boolean addFactura(Factura factura){ return facturas.add(factura);}
 
     /**
@@ -75,6 +79,10 @@ public class Mascota {
             res = false;
         }
             return res;
+    }
+    public static Mascota getMascota(int id,Session session){
+        List<Mascota> mascotas = session.createQuery("FROM Mascota m where m.id = :id",Mascota.class).setParameter("id",id).getResultList();
+        return mascotas.getFirst();
     }
 
 }
