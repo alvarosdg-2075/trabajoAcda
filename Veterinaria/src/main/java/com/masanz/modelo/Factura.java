@@ -86,6 +86,6 @@ public class Factura {
 
     @Override
     public String toString(){
-        return String.format("Factura: %d | Fecha: %s | Mascota: %d | Coste: %f | Descripcion: %s",id,fecha.toString(),mascota_factura.getId(),coste,descripcion);
+        return String.format("Factura: %d | Fecha: %s | Mascota: %d | Coste: %.25f | Descripcion: %s",id,fecha.toString(),mascota_factura.getId(),coste,descripcion);
     }
 }

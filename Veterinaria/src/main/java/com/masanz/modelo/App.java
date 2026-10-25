@@ -79,7 +79,7 @@ public class App {
      * @return true si ejecución correcta false si ejecución fallida y ultima acción cancelada
      */
     private boolean altaClienteYMascotas(Session session) {
-        Boolean res = false;
+        boolean res = false;
         Cliente clienteInsert;
         clienteInsert = altaCliente(session);
         res = clienteInsert != null;
@@ -129,7 +129,7 @@ public class App {
         String fecha_nac;
         boolean fechaValida;
         Cliente duenio;
-        Date dateNac;
+        Date dateNac = null;
         do {
             System.out.println("Introduce el nombre de tu mascota");
             nombre = scan.nextLine();
@@ -156,7 +156,6 @@ public class App {
                 System.out.println("Fecha no valida");
             }
         } while (!fechaValida);
-
         do {
             System.out.println("Introduce el DNI del cliente dueño");
             String dni_Cliente = scan.nextLine();
@@ -218,7 +217,6 @@ public class App {
             } catch (IOException e) {
                 System.err.println(e.getMessage());
             }
-
         }
         return factura == null;
     }
