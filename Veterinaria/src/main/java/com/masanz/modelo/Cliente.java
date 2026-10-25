@@ -5,6 +5,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -36,6 +37,7 @@ public class Cliente {
         this.nombre = nombre;
         this.telefono = telefono;
         this.email = email;
+        this.mascotas = new ArrayList<Mascota>();
     }
 
     public int getId(){return this.id;}

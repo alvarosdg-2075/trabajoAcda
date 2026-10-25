@@ -4,6 +4,7 @@ import org.hibernate.*;
 import jakarta.persistence.*;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -40,6 +41,7 @@ public class Mascota {
         this.raza = raza;
         this.fecha_nac = fecha_nac;
         this.cliente = cliente;
+        this.facturas = new ArrayList<Factura>();
     }
 
     public Cliente getCliente() {return cliente;}

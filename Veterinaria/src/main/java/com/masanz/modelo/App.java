@@ -16,9 +16,10 @@ public class App {
     public void main(String[] args) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             System.out.println("Sesion abierta");
-            int opcion = 1;
+            int opcion = 0;
             do {
                 printMenu();
+                opcion = sc.nextInt();
                 switch (opcion) {
                     case 1:
                         altaClienteYMascotas(session);

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+        <!-- Configuración de conexión JDBC a H2 en memoria -->
+        <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+        <!--<property name="hibernate.connection.driver_class">org.h2.Driver</property>-->
+        <!--<property name="hibernate.connection.url">jdbc:h2:mem:centro_db;DB_CLOSE_DELAY=-1</property>-->
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3307/centro_db</property>
+
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.connection.password">root</property>
+
+        <!-- Dialecto SQL y creación automática de tablas -->
+        <property name="hibernate.hbm2ddl.auto">update</property>
+
+        <!-- Mostrar y formatear sentencias SQL en consola -->
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.format_sql">true</property>
+
+        <!-- Mapeo obligatorio de clases entidad anotadas con @Entity -->
+        <mapping class="com.masanz.modelo.Cliente"/>
+        <mapping class="com.masanz.modelo.Factura"/>
+        <mapping class="com.masanz.modelo.Mascota"/>
+    </session-factory>
+</hibernate-configuration>
