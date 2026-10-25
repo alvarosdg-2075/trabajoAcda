@@ -41,6 +41,9 @@ public class App {
                         getFacturas(session);
                         break;
                     case 6:
+                        descargarArchivo(gestorFTP);
+                        break;
+                    case 7:
                         break;
                     default:
                         opcion = 0;
@@ -48,7 +51,7 @@ public class App {
                         break;
                 }
 
-            } while (opcion != 6);
+            } while (opcion != 7);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -68,7 +71,8 @@ public class App {
         System.out.println("3 - Registrar mascota");
         System.out.println("4 - Registro tratamiento");
         System.out.println("5 - Consulta historial de tratamientos");
-        System.out.println("6 - Salir");
+        System.out.println("6 - Descargar archivo del servidor FTP");
+        System.out.println("7 - Salir");
     }
 
     /**
@@ -194,10 +198,13 @@ public class App {
         Date fecha = Date.valueOf(LocalDate.now());
         Factura factura =  Factura.insertar(fecha,descripcion,coste,mascota,session);
         if(factura != null){
-            System.out.println("Introduce la ruta en la que guardar la factura en el servidor");
+            System.out.println("Introduce la ruta (nombre auto generado) en la que guardar la factura en el servidor");
             String rutaServidor = scan.nextLine();
+            if (rutaServidor != null && !rutaServidor.isEmpty() && rutaServidor.endsWith("/")) {
+                rutaServidor = rutaServidor.substring(0, rutaServidor.length() - 1);
+            }
             try {
-                gestorFTP.subirArchivo("facturas/Factura_"+factura.getId()+"_"+factura.getMascota().getCliente().getDni()+".txt",rutaServidor);
+                if(gestorFTP.subirArchivo("facturas/Factura_"+factura.getId()+"_"+factura.getMascota().getCliente().getDni()+".txt",rutaServidor+"/Factura_"+factura.getId()+"_"+factura.getMascota().getCliente().getDni()+".txt"));
             } catch (IOException e) {
                 System.err.println(e.getMessage());
             }
@@ -246,6 +253,23 @@ public class App {
         }
         System.out.printf("Total: %.2f EUR\n", total);
         return filas;
+    }
+    private void descargarArchivo(GestorFTP gestorFTP){
+        Scanner scan = new Scanner(System.in);
+        try {
+            System.out.println("Introduce la ruta y nombre en el servidor FTP del archivo que buscas:");
+            String rutaServer = scan.nextLine();
+            System.out.println("Introduce la ruta  y nombre en el servidor FTP del archivo que buscas:");
+            String rutalocal = scan.nextLine();
+            if(gestorFTP.descargarArchivo(rutaServer,rutalocal)){
+                System.out.println("Archivo descargado correctamente");
+            }
+            else{
+                System.out.println("Fallo en la descarga");
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
 
