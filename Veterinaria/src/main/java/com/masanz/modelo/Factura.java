@@ -1,5 +1,6 @@
 package com.masanz.modelo;
 
+import com.masanz.controller.FacturaController;
 import jakarta.persistence.*;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -64,6 +65,7 @@ public class Factura {
             mascota.addFactura(factura);
             session.persist(factura);
             tr.commit();
+            FacturaController.generarFactura(factura );
         }catch(HibernateException he){
             if (tr != null){
                 tr.rollback();

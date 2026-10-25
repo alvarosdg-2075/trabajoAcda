@@ -62,10 +62,10 @@ public class Mascota {
      * @param especie Especie de la mascota
      * @param raza Raza de la mascota
      * @param fecha_nac Fecha de nacimiento de la mascota
-     * @return true si se ha efectuado sin problemas la inserción false si no.
+     * @return id mascota si se ha efectuado sin problemas la inserción -1 si no.
      */
-    public static boolean insertar(String nombre, String especie, String raza, Date fecha_nac,Cliente cliente ,Session session){
-        boolean res = true;
+    public static int insertar(String nombre, String especie, String raza, Date fecha_nac,Cliente cliente ,Session session){
+        int res = -1;
         Transaction tr = null;
         try {
             tr=session.beginTransaction();
@@ -74,11 +74,11 @@ public class Mascota {
             cliente.addMascota(mascota);
             session.persist(mascota);
             tr.commit();
+            res = mascota.getId();
         }catch(HibernateException he){
             if (tr != null){
                 tr.rollback();
             }
-            res = false;
         }
             return res;
     }

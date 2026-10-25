@@ -136,7 +136,11 @@ public class App {
         System.out.println("Introduce el DNI del cliente dueño");
         String dni_Cliente = scan.nextLine();
         Cliente duenio = Cliente.getCliente(dni_Cliente, session);
-        return Mascota.insertar(nombre, especie, raza, DateNac, duenio, session);
+        int id = Mascota.insertar(nombre, especie, raza, DateNac, duenio, session);
+        if (id != -1){
+            System.out.println("Id mascota añadida: " + id);
+        }
+        return id!=-1;
     }
 
     private boolean registroTratamiento(Session session) {

@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class FacturaController {
     public static void generarFactura(Factura factura){
-        String ruta = "Factura_"+factura.getId()+"_"+factura.getMascota().getCliente().getDni()+".txt";
+        String ruta = "facturas/Factura_"+factura.getId()+"_"+factura.getMascota().getCliente().getDni()+".txt";
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(ruta))){
             bw.write("Factura: "+ factura.getId());
             bw.newLine();
