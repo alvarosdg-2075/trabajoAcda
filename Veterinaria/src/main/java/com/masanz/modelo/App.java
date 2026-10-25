@@ -1,21 +1,25 @@
 package com.masanz.modelo;
 
+import com.masanz.controller.FacturaController;
+import com.masanz.controller.GestorFTP;
 import com.masanz.util.HibernateUtil;
 import org.hibernate.Session;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 import java.util.Scanner;
 
 public class App {
     Scanner sc = new Scanner(System.in);
 
     public void main(String[] args) {
+        GestorFTP gestorFTP = new GestorFTP();
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            System.out.println("Sesion abierta");
+            System.out.println("Sesion Hibernate abierta");
+            gestorFTP.conectar();
+            System.out.println("Conexión ftp establecida");
             int opcion = 0;
             do {
                 printMenu();
@@ -31,7 +35,7 @@ public class App {
                         altaMascota(session);
                         break;
                     case 4:
-                        registroTratamiento(session);
+                        registroTratamiento(session,gestorFTP);
                         break;
                     case 5:
                         getFacturas(session);
@@ -49,6 +53,11 @@ public class App {
             e.printStackTrace();
         } finally {
             HibernateUtil.shutdown();
+            try{
+                gestorFTP.desconectar();
+            } catch (IOException e) {
+                System.err.println("Error en la desconexión del cliente FTP, " + e.getMessage());
+            }
         }
     }
 
@@ -114,6 +123,7 @@ public class App {
         String raza;
         String fecha_nac;
         boolean fechaValida;
+        Cliente duenio;
         do {
             System.out.println("Introduce el nombre de tu mascota");
             nombre = scan.nextLine();
@@ -133,9 +143,14 @@ public class App {
             fechaValida = (fechaSegment.length == 3 && fechaSegment[0].length() == 4 && fechaSegment[1].length() <= 2 && fechaSegment[2].length() <= 2);
         } while (!fechaValida);
         Date DateNac = Date.valueOf(fecha_nac);
-        System.out.println("Introduce el DNI del cliente dueño");
-        String dni_Cliente = scan.nextLine();
-        Cliente duenio = Cliente.getCliente(dni_Cliente, session);
+        do {
+            System.out.println("Introduce el DNI del cliente dueño");
+            String dni_Cliente = scan.nextLine();
+            duenio = Cliente.getCliente(dni_Cliente, session);
+            if(duenio == null){
+                System.out.println("Dueño no encontrado, compruebe el dni");
+            }
+        }while(duenio != null);
         int id = Mascota.insertar(nombre, especie, raza, DateNac, duenio, session);
         if (id != -1){
             System.out.println("Id mascota añadida: " + id);
@@ -143,18 +158,22 @@ public class App {
         return id!=-1;
     }
 
-    private boolean registroTratamiento(Session session) {
+    private boolean registroTratamiento(Session session,GestorFTP gestorFTP) {
         Scanner scan = new Scanner(System.in);
-
         System.out.println("Introduce el ID de la mascota");
         int idMascota;
+        Mascota mascota;
         try {
             idMascota = Integer.parseInt(scan.nextLine().trim());
         } catch (NumberFormatException e) {
             System.out.println("ID de mascota no válido");
             return false;
         }
-        Mascota mascota = Mascota.getMascota(idMascota,session);
+        mascota = Mascota.getMascota(idMascota, session);
+        if (mascota == null){
+            System.out.println("Mascota no encontrada, comprueba el id");
+            return false;
+        }
         String descripcion;
         do {
             System.out.println("Introduce la descripción del tratamiento");
@@ -173,7 +192,18 @@ public class App {
             return false;
         }
         Date fecha = Date.valueOf(LocalDate.now());
-        return Factura.insertar(fecha,descripcion,coste,mascota,session);
+        Factura factura =  Factura.insertar(fecha,descripcion,coste,mascota,session);
+        if(factura != null){
+            System.out.println("Introduce la ruta en la que guardar la factura en el servidor");
+            String rutaServidor = scan.nextLine();
+            try {
+                gestorFTP.subirArchivo("facturas/Factura_"+factura.getId()+"_"+factura.getMascota().getCliente().getDni()+".txt",rutaServidor);
+            } catch (IOException e) {
+                System.err.println(e.getMessage());
+            }
+
+        }
+        return factura == null;
     }
     private ArrayList<Factura> getFacturas(Session session) {
         Scanner scan = new Scanner(System.in);
@@ -191,6 +221,10 @@ public class App {
                 filas = Factura.getFacturasMascota(id,session);
             } else {
                 System.out.println("Opción no válida");
+                return null;
+            }
+            if(filas == null){
+                System.out.println("Facturas no encontradas");
                 return null;
             }
         } catch (NumberFormatException e) {

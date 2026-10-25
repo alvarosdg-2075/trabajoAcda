@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Entity
 @Table(name = "mascotas")
@@ -83,8 +84,14 @@ public class Mascota {
             return res;
     }
     public static Mascota getMascota(int id,Session session){
-        List<Mascota> mascotas = session.createQuery("FROM Mascota m where m.id = :id",Mascota.class).setParameter("id",id).getResultList();
-        return mascotas.getFirst();
+        Mascota  mascota;
+        try {
+            List<Mascota> mascotas = session.createQuery("FROM Mascota m where m.id = :id",Mascota.class).setParameter("id",id).getResultList();
+            mascota = mascotas.getFirst();
+        }catch (NoSuchElementException e){
+            return null;
+        }
+        return mascota;
     }
 
 }

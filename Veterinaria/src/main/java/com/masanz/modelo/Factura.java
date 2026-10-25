@@ -9,6 +9,7 @@ import org.hibernate.Transaction;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Entity
 @Table(name = "facturas")
@@ -47,21 +48,29 @@ public class Factura {
     public float getCoste() {return coste;}
 
     public static ArrayList<Factura> getFacturasCliente(String dni, Session session){
-        List<Factura> facturas = session.createQuery("FROM Factura f where f.mascota_factura.cliente.dni = :dni",Factura.class).setParameter("dni",dni).getResultList();
-        return new ArrayList<>(facturas);
+        try {
+            List<Factura> facturas = session.createQuery("FROM Factura f where f.mascota_factura.cliente.dni = :dni",Factura.class).setParameter("dni",dni).getResultList();
+            return new ArrayList<>(facturas);
+        }catch (NoSuchElementException e){
+            return null;
+        }
     }
     public static ArrayList<Factura> getFacturasMascota(int id_mascota, Session session){
-        List<Factura> facturas = session.createQuery("FROM Factura f where f.mascota_factura.id = :id",Factura.class).setParameter("id",id_mascota).getResultList();
-        return new ArrayList<>(facturas);
+        try {
+            List<Factura> facturas = session.createQuery("FROM Factura f where f.mascota_factura.id = :id",Factura.class).setParameter("id",id_mascota).getResultList();
+            return new ArrayList<>(facturas);
+        }catch (NoSuchElementException e){
+            return null;
+        }
     }
 
-    public static boolean insertar(Date fecha,String descripcion,float coste,Mascota mascota ,Session session){
-        boolean res = true;
+    public static Factura insertar(Date fecha,String descripcion,float coste,Mascota mascota ,Session session){
+        Factura factura;
         Transaction tr = null;
         try {
             tr=session.beginTransaction();
-            mascota = (Mascota) session.merge(mascota);
-            Factura factura = new Factura(fecha,descripcion,coste,mascota);
+            mascota = session.merge(mascota);
+            factura = new Factura(fecha,descripcion,coste,mascota);
             mascota.addFactura(factura);
             session.persist(factura);
             tr.commit();
@@ -70,9 +79,9 @@ public class Factura {
             if (tr != null){
                 tr.rollback();
             }
-            res = false;
+            return null;
         }
-        return res;
+        return factura;
     }
 
     @Override

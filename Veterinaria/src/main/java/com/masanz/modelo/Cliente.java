@@ -7,6 +7,7 @@ import org.hibernate.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Entity
 @Table(name = "clientes")
@@ -65,7 +66,13 @@ public class Cliente {
         return cliente;
     }
     public static Cliente getCliente(String dni,Session session){
-        List<Cliente> clientes = session.createQuery("FROM Cliente c where c.dni = :dni",Cliente.class).setParameter("dni",dni).getResultList();
-        return clientes.getFirst();
+        Cliente cliente;
+        try {
+            List<Cliente> clientes = session.createQuery("FROM Cliente c where c.dni = :dni", Cliente.class).setParameter("dni", dni).getResultList();
+            cliente = clientes.getFirst();
+        }catch (NoSuchElementException e){
+            return null;
+        }
+        return cliente;
     }
 }
