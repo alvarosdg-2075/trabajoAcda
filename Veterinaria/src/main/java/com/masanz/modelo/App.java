@@ -267,7 +267,7 @@ public class App {
         try {
             System.out.println("Introduce la ruta y nombre en el servidor FTP del archivo que buscas:");
             String rutaServer = scan.nextLine();
-            System.out.println("Introduce la ruta  y nombre en el servidor FTP del archivo que buscas:");
+            System.out.println("Introduce la ruta  y nombre  que deseas en el cliente FTP del archivo:");
             String rutalocal = scan.nextLine();
             if(gestorFTP.descargarArchivo(rutaServer,rutalocal)){
                 System.out.println("Archivo descargado correctamente");
