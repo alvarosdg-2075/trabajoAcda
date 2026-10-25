@@ -92,6 +92,7 @@ public class App {
             if (!res) {
                 return res;
             }
+            sc.nextLine();
             System.out.println("¿Quieres añadir otra mascota? s/N");
             leido = sc.nextLine();
         } while (leido.equalsIgnoreCase("s"));
@@ -128,6 +129,7 @@ public class App {
         String fecha_nac;
         boolean fechaValida;
         Cliente duenio;
+        Date dateNac;
         do {
             System.out.println("Introduce el nombre de tu mascota");
             nombre = scan.nextLine();
@@ -145,8 +147,16 @@ public class App {
             fecha_nac = scan.nextLine();
             String[] fechaSegment = fecha_nac.split("-");
             fechaValida = (fechaSegment.length == 3 && fechaSegment[0].length() == 4 && fechaSegment[1].length() <= 2 && fechaSegment[2].length() <= 2);
+            try {
+                dateNac = Date.valueOf(fecha_nac);
+            }catch (IllegalArgumentException e){
+                fechaValida = false;
+            }
+            if(!fechaValida) {
+                System.out.println("Fecha no valida");
+            }
         } while (!fechaValida);
-        Date DateNac = Date.valueOf(fecha_nac);
+
         do {
             System.out.println("Introduce el DNI del cliente dueño");
             String dni_Cliente = scan.nextLine();
@@ -154,8 +164,8 @@ public class App {
             if(duenio == null){
                 System.out.println("Dueño no encontrado, compruebe el dni");
             }
-        }while(duenio != null);
-        int id = Mascota.insertar(nombre, especie, raza, DateNac, duenio, session);
+        }while(duenio == null);
+        int id = Mascota.insertar(nombre, especie, raza, dateNac, duenio, session);
         if (id != -1){
             System.out.println("Id mascota añadida: " + id);
         }

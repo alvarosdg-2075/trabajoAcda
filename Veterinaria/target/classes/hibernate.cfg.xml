@@ -9,7 +9,7 @@
         <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
         <!--<property name="hibernate.connection.driver_class">org.h2.Driver</property>-->
         <!--<property name="hibernate.connection.url">jdbc:h2:mem:centro_db;DB_CLOSE_DELAY=-1</property>-->
-        <property name="hibernate.connection.url">jdbc:mysql://localhost:3307/centro_db</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3307/vet</property>
 
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password">root</property>
